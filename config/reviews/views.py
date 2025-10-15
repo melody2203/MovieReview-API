@@ -1,31 +1,31 @@
-from rest_framework import generics, permissions
-from .models import Review
-from .serializers import ReviewSerializer, ReviewCreateSerializer
+from rest_framework import generics
+from .models import Movie, Review
+from .serializers import MovieSerializer, ReviewSerializer
+
+class MovieList(generics.ListCreateAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+
+class MovieDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
 
 class ReviewList(generics.ListCreateAPIView):
+    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    def get_queryset(self):
-        queryset = Review.objects.all()
-        movie_id = self.request.query_params.get('movie_id')
-        if movie_id:
-            queryset = queryset.filter(movie_id=movie_id)
-        return queryset
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return ReviewCreateSerializer
-        return ReviewSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    
-    def get_permissions(self):
-        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
-            return [permissions.IsAuthenticated()]
-        return [permissions.IsAuthenticatedOrReadOnly()]
+
+class MovieReviewList(generics.ListCreateAPIView):
+    serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        movie_id = self.kwargs['movie_id']
+        return Review.objects.filter(movie_id=movie_id)
+
+    def perform_create(self, serializer):
+        movie_id = self.kwargs['movie_id']
+        movie = Movie.objects.get(id=movie_id)
+        serializer.save(movie=movie)
