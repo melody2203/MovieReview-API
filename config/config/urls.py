@@ -6,5 +6,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth-token/', obtain_auth_token, name='api_token_auth'),
     path('api/users/', include('users.urls')),
-    path('api/', include('reviews.urls')),  # All movie/review APIs under /api/
+    path('api/movies/', include('reviews.urls')),
 ]

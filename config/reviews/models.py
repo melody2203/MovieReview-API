@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
+from django.contrib.auth.models import User
+from django.conf import settings
 
 class Movie(models.Model):
     GENRE_CHOICES = [
@@ -50,6 +52,7 @@ class Review(models.Model):
         on_delete=models.CASCADE, 
         related_name='reviews'
     )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Connect to User
     user_name = models.CharField(max_length=100)
     rating = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)],
