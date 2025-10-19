@@ -25,7 +25,7 @@ class Movie(models.Model):
     genre = models.CharField(max_length=50, choices=GENRE_CHOICES)
     director = models.CharField(max_length=100)
     cast = models.TextField(help_text="Main cast members")
-    poster = models.ImageField(upload_to='movie_posters/', null=True, blank=True)
+    poster = models.CharField(max_length=500, null=True, blank=True, help_text="URL to movie poster")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

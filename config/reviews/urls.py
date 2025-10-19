@@ -14,4 +14,8 @@ urlpatterns = [
     # Authentication endpoints
     path('auth/register/', views.UserCreate.as_view(), name='register'),
     path('auth/login/', views.login, name='login'),
+
+    # User movie lists
+    path('user/movies/', views.UserMovieListView.as_view(), name='user-movie-list'),
+    path('user/movies/<int:pk>/', views.UserMovieListDetail.as_view(), name='user-movie-detail'),
 ]
